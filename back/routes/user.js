@@ -4,7 +4,7 @@ const express = require('express');
 const router = express.Router();
 
 //Importation du controller pour associer les fonctions aux routes 
-const userCtrl = require('../controllers/user-controller');
+const userCtrl = require('../controllers/user');
 
 //Création des routes
 router.post('/signup', userCtrl.signup);

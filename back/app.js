@@ -1,9 +1,10 @@
 //Importation des packages node
 const express = require('express');
 const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
 
 //Importation des routes
-const userRoutes = require('./routes/user-routes');
+const userRoutes = require('./routes/user');
 
 //Création de la constante application express
 const app = express();
@@ -24,6 +25,8 @@ app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
     next();
 });
+
+app.use(bodyParser.json());
 
 //Création de la méthode d'utilisation de l'application
 app.use((req, res) => {
