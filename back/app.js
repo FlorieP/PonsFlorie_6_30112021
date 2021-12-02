@@ -10,8 +10,8 @@ const userRoutes = require('./routes/user');
 const app = express();
 
 //Connexion à la base de donnée MongoDB
-mongoose.connect('"mongodb+srv://Yunnie:OneW1514523@cluster0.m9uus.mongodb.net/Cluster0?retryWrites=true&w=majority',
-    {
+mongoose.connect('mongodb+srv://Yunnie:OneW1514523@cluster0.m9uus.mongodb.net/Cluster0?retryWrites=true&w=majority',
+    { 
         useNewUrlParser: true,
         useUnifiedTopology: true
     })
