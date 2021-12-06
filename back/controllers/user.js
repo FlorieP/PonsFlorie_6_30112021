@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 // Importation du model de l'utilisateur
-const User = require('../models/user');
+const User = require('../models/User');
 
 //Création méthode d'inscription d'un utilisateur
 exports.signup = (req, res, next) => {

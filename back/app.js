@@ -2,15 +2,17 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const path = require('path');
 
 //Importation des routes
 const userRoutes = require('./routes/user');
+const sauceRoutes = require('./routes/sauce');
 
 //Création de la constante application express
 const app = express();
 
 //Connexion à la base de donnée MongoDB
-mongoose.connect('mongodb+srv://Yunnie:OneW1514523@cluster0.m9uus.mongodb.net/Cluster0?retryWrites=true&w=majority',
+mongoose.connect('mongodb+srv://Yunnie:OneW1514523@p6database.m9uus.mongodb.net/P6DataBase?retryWrites=true&w=majority',
     { 
         useNewUrlParser: true,
         useUnifiedTopology: true
@@ -26,6 +28,7 @@ app.use((req, res, next) => {
     next();
 });
 
+//
 app.use(bodyParser.json());
 
 //Création de la méthode d'utilisation de l'application
@@ -33,8 +36,12 @@ app.use((req, res) => {
     res.json({ message: 'Votre requête a bien été reçue !' });
 });
 
+//Création du gestionnaire de la ressource images de manière statique
+app.use('/images', express.static(path.join(__dirname, 'images')));
+
 //Création des méthodes d'utilisation des routes
 app.use('/api/auth', userRoutes);
+app.use('/api/sauces', sauceRoutes);
 
 //Exportation de l'application
 module.exports = app;
