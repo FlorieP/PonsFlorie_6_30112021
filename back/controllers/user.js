@@ -1,18 +1,22 @@
 //Importation des packages de node
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const cryptojs = require('crypto-js'); 
 
 // Importation du model de l'utilisateur
 const User = require('../models/User');
 
 //Création méthode d'inscription d'un utilisateur
 exports.signup = (req, res, next) => {
+    //Cryptage de l'email
+    //const cryptEmail = cryptojs.HmacSHA256(req.body.email, "EMAIL_KEY_SECRET").toString();
     //Hashage du mot de passe
     bcrypt.hash(req.body.password, 10)
         //Récupération du hash de mdp 
         .then(hash => {
             //Création du nouvel utlisateur
             const user = new User({
+                //email: cryptEmail, 
                 email: req.body.email,
                 password: hash
             });
