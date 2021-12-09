@@ -31,11 +31,6 @@ app.use((req, res, next) => {
 //
 app.use(bodyParser.json());
 
-//Création de la méthode d'utilisation de l'application
-app.use((req, res) => {
-    res.json({ message: 'Votre requête a bien été reçue !' });
-});
-
 //Création du gestionnaire de la ressource images de manière statique
 app.use('/images', express.static(path.join(__dirname, 'images')));
 

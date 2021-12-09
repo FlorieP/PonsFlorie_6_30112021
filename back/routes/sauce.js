@@ -1,5 +1,7 @@
 //Importation des packages de node
 const express = require('express');
+
+//Création d'un routeur
 const router = express.Router();
 
 //Importation des middleware

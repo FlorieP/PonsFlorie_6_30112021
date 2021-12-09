@@ -8,7 +8,8 @@ const User = require('../models/User');
 //Création méthode d'inscription d'un utilisateur
 exports.signup = (req, res, next) => {
     //Hashage du mot de passe
-    console.log('test: ' + req.body.email);
+    console.log('mail: ' + req.body.email);
+    console.log('pw: ' + req.body.passeword);
     bcrypt.hash(req.body.password, 10)
         //Récupération du hash de mdp 
         .then(hash => {
@@ -17,7 +18,7 @@ exports.signup = (req, res, next) => {
                 email: req.body.email,
                 passeword: hash
             });
-            console.log(req.body.email);
+            console.log(user);
             //Enregistrement du nouvel utilisateur
             user.save()
                 //Connexion serveur réussi

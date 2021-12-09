@@ -2,7 +2,7 @@
 const fs = require('fs'); //filesystem
 
 //Importation du model sauce
-const sauce = require('../models/Sauce');
+const Sauce = require('../models/Sauce');
 
 //Création du POST pour créer une sauce
 exports.createSauce = (req, res, next) => {
@@ -14,7 +14,7 @@ exports.createSauce = (req, res, next) => {
         //Récupération de l'url de l'image dynamiquement 
         imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
     });
-    sauce.save()
+    Sauce.save()
         .then(() => res.status(201).json({ message: 'Objet enregistré !' }))
         .catch(error => res.status(400).json({ error }));
 };
@@ -22,7 +22,7 @@ exports.createSauce = (req, res, next) => {
 //Création du GET pour afficher toutes les sauces
 exports.getAllSauce = (req, res, next) => {
     //fonction find qui permet de trouver tous les sauces
-    sauce.find()
+    Sauce.find()
         //récupération du tableau de toutes les sauces retournées par la base
         .then(sauces => res.status(200).json(sauces))
         .catch(error => res.status(400).json({ error }));
@@ -31,7 +31,7 @@ exports.getAllSauce = (req, res, next) => {
 //Création du GET pour afficher une sauce
 exports.getOneSauce = (req, res, next) => {
     //fonction findOne qui permet de trouver une sauce en particulier
-    sauce.findOne({ _id: req.params.id })
+    Sauce.findOne({ _id: req.params.id })
         //récupération de la sauce via le paramètre id
         .then(sauce => res.status(200).json(sauces))
         .catch(error => res.status(400).json({ error }));
@@ -47,7 +47,7 @@ exports.modifySauce = (req, res, next) => {
             imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
         } : { ...req.body }
     //fonction qui permet de mettre à jour une sauce
-    sauce.updateOne({ _id: req.params.id }, { ...sauceObject, _id: req.params.id })
+    Sauce.updateOne({ _id: req.params.id }, { ...sauceObject, _id: req.params.id })
         //modification de la sauce via le paramètre id 
         .then(() => res.status(201).json({ message: 'Objet modifié !' }))
         .catch(error => res.status(400).json({ error }));
@@ -56,7 +56,7 @@ exports.modifySauce = (req, res, next) => {
 //Création du DELETE pour supprimer une sauce
 exports.deleteSauce = (req, res, next) => {
     //Récupération du nom et l'url du fichier
-    sauce.findOne({ _id: req.params.id })
+    Sauce.findOne({ _id: req.params.id })
         .then(sauce => {
             //récupération du nom du fichier via un split de l'url
             const filename = sauce.imageUrl.split('/images/')[1];
