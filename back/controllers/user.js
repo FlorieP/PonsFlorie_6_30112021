@@ -1,25 +1,24 @@
 //Importation des packages de node
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const cryptojs = require('crypto-js'); 
 
 // Importation du model de l'utilisateur
 const User = require('../models/User');
 
 //Création méthode d'inscription d'un utilisateur
 exports.signup = (req, res, next) => {
-    //Cryptage de l'email
-    //const cryptEmail = cryptojs.HmacSHA256(req.body.email, "EMAIL_KEY_SECRET").toString();
     //Hashage du mot de passe
+    console.log('mail: ' + req.body.email);
+    console.log('pw: ' + req.body.passeword);
     bcrypt.hash(req.body.password, 10)
         //Récupération du hash de mdp 
         .then(hash => {
             //Création du nouvel utlisateur
             const user = new User({
-                //email: cryptEmail, 
                 email: req.body.email,
-                password: hash
+                passeword: hash
             });
+            console.log(user);
             //Enregistrement du nouvel utilisateur
             user.save()
                 //Connexion serveur réussi
@@ -27,7 +26,7 @@ exports.signup = (req, res, next) => {
                 //Gestion erreur serveur
                 .catch(error => res.status(400).json({ error }));
         })
-        //Gestion erreur serveur
+        //Festion erreur serveur
         .catch(error => res.status(500).json({ error }));
 };
 
@@ -52,7 +51,7 @@ exports.login = (req, res, next) => {
                     //Bon mdp, renvoi d'un json avec un id et un token 
                     res.status(200).json({
                         userId: user._id,
-                        //appel de la fonction sign de JW
+                        //appel de la fonction sign de JWT
                         token: jwt.sign(
                             //1er argument des données que l'on veut encodé
                             { userId: user._id },
@@ -60,7 +59,7 @@ exports.login = (req, res, next) => {
                             'RANDOM_TOKEN_SECRET',
                             //configuration de l'expiration du token
                             { expiresIn: '24h' }
-                        )
+                          )
                     });
                 })
                 //Gestion erreur serveur
