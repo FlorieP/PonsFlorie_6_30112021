@@ -1,19 +1,22 @@
 //Importation des packages de node
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const cryptojs = require('crypto-js');
 
 // Importation du model de l'utilisateur
 const User = require('../models/User');
 
 //Création méthode d'inscription d'un utilisateur
 exports.signup = (req, res, next) => {
+    //Chiffrement de l'email
+    const emailCrypto = cryptojs.HmacSHA256(req.body.email, "CLE_SECRET_CRYPTO").toString();
     //Hashage du mot de passe
     bcrypt.hash(req.body.password, 10)
         //Récupération du hash de mdp 
         .then(hash => {
             //Création du nouvel utlisateur
             const user = new User({
-                email: req.body.email,
+                email: emailCrypto,
                 password: hash
             });
             //Enregistrement du nouvel utilisateur
@@ -29,11 +32,10 @@ exports.signup = (req, res, next) => {
 
 //Création méthode de connexion d'un utilisateur
 exports.login = (req, res, next) => {
-    // compariason email
-
+    // Chiffrement email
+    const emailCrypto = cryptojs.HmacSHA256(req.body.email, "CLE_SECRET_CRYPTO").toString();
     //Utilisation de la méthode findOne pour trouver l'utilisateur qui correspond à l'adresse mail utilisé
-    User.findOne({ email: req.body.email })
-
+    User.findOne({ email: emailCrypto })
         //Vérification de récupération d'un utilisateur
         .then(user => {
             //Si on a pas trouvé d'utilisateur renvoyer une erreur
