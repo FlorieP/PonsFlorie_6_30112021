@@ -117,7 +117,6 @@ exports.likeSauce = (req, res, next) => {
             Sauce.updateOne({ _id: sauceId }, { $pull: { usersLiked: userId }, $inc: { likes: -1 } })
               .then(() => res.status(201).json({ message: "Sauce unlikée" }))
               .catch((error) => res.status(400).json({ error }));
-            //Si l'utilisateur a déjà détesté la sauce
           }
           //Si l'utilisateur a déjà dislike la sauce
           if (userDislike) {

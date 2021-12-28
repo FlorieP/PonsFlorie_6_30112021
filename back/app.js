@@ -26,7 +26,7 @@ app.use((req, res, next) => {
     next();
 });
 
-//
+//Indiquer à l'application qu'elle doit utiliser JSON
 app.use(bodyParser.json());
 
 //Création du gestionnaire de la ressource images de manière statique
