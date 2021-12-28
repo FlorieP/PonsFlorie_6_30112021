@@ -53,7 +53,7 @@ exports.login = (req, res, next) => {
                     //Bon mdp, renvoi d'un json avec un id et un token 
                     res.status(200).json({
                         userId: user._id,
-                        //appel de la fonction sign de JW
+                        //appel de la fonction sign de JWT
                         token: jwt.sign(
                             //1er argument des données que l'on veut encodé
                             { userId: user._id },
