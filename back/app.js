@@ -3,6 +3,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const path = require('path');
+const dotenv = require('dotenv').config();
 
 //Importation des routes
 const sauceRoutes = require('./routes/sauce');
@@ -12,7 +13,7 @@ const userRoutes = require('./routes/user');
 const app = express();
 
 //Connexion à la base de donnée MongoDB
-mongoose.connect('mongodb+srv://Yunnie:OneW1514523@p6database.m9uus.mongodb.net/P6DataBase?retryWrites=true&w=majority',
+mongoose.connect(`mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_USERPW}@p6database.m9uus.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`,
   { useNewUrlParser: true,
     useUnifiedTopology: true })
   .then(() => console.log('Connexion à MongoDB réussie !'))

@@ -6,7 +6,7 @@ const Sauce = require('../models/Sauce');
 
 //Création du POST pour créer une sauce
 exports.createSauce = (req, res, next) => {
-  //Analyse et tranformation de la chaine de caractère
+  //Analyse et tranformation de la chaine de caractère JSON en valeur JS
   const sauceObject = JSON.parse(req.body.sauce);
   //Création d'une nouvelle sauce
   const sauce = new Sauce({
@@ -49,17 +49,27 @@ exports.getOneSauce = (req, res, next) => {
 
 //Création du PUT pour modifier une sauce
 exports.modifySauce = (req, res, next) => {
-  //Savoir si il y a ou non une nouvelle image dans la modification
-  const sauceObject = req.file ?
-    {
-      ...JSON.parse(req.body.sauce),
-      imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
-    } : { ...req.body };
-  //fonction qui permet de mettre à jour une sauce
-  Sauce.updateOne({ _id: req.params.id }, { ...sauceObject, _id: req.params.id })
-    //modification de la sauce via le paramètre id 
-    .then(() => res.status(200).json({ message: 'Sauce modifiée !' }))
-    .catch(error => res.status(400).json({ error }));
+  //Vérification de l'userId
+  Sauce.findOne({ _id: req.params.id })
+    .then(sauce => {
+      if (req.body.userId != sauce.userId) {
+        res.status(403).json({ message: "Seul l'utilisateur qui a créé la sauce peut la modifier" })
+          .catch((error) => res.status(400).json({ error }));
+      } else {
+        //Savoir si il y a ou non une nouvelle image dans la modification
+        const sauceObject = req.file ?
+          {
+            ...JSON.parse(req.body.sauce),
+            imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+          } : { ...req.body };
+        //fonction qui permet de mettre à jour une sauce
+        Sauce.updateOne({ _id: req.params.id }, { ...sauceObject, _id: req.params.id })
+          //modification de la sauce via le paramètre id 
+          .then(() => res.status(200).json({ message: 'Sauce modifiée !' }))
+          .catch(error => res.status(400).json({ error }));
+      }
+    })
+    .catch(error => res.status(500).json({ error }));
 };
 
 //Création du DELETE pour supprimer une sauce
@@ -134,7 +144,7 @@ exports.likeSauce = (req, res, next) => {
             Sauce.updateOne({ _id: sauceId }, { $push: { usersDisliked: userId }, $inc: { dislikes: +1 } })
               .then(() => res.status(201).json({ message: "Sauce dislikée" }))
               .catch((error) => { console.log("test3"); console.log(error); res.status(400).json({ error }) });
-          //Si l'utilisateur a déjà dislike la sauce
+            //Si l'utilisateur a déjà dislike la sauce
           } else {
             res.status(403).json({ message: "Vous ne pouvais pas disliker deux fois la sauce" })
               .catch((error) => res.status(400).json({ error }));

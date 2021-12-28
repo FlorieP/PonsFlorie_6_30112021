@@ -2,6 +2,7 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const cryptojs = require('crypto-js');
+const dotenv = require('dotenv').config();
 
 // Importation du model de l'utilisateur
 const User = require('../models/User');
@@ -9,7 +10,7 @@ const User = require('../models/User');
 //Création méthode d'inscription d'un utilisateur
 exports.signup = (req, res, next) => {
     //Chiffrement de l'email
-    const emailCrypto = cryptojs.HmacSHA256(req.body.email, "CLE_SECRET_CRYPTO").toString();
+    const emailCrypto = cryptojs.HmacSHA256(req.body.email, process.env.CRYPTOJS_KEY_EMAIL).toString();
     //Hashage du mot de passe
     bcrypt.hash(req.body.password, 10)
         //Récupération du hash de mdp 
@@ -33,7 +34,7 @@ exports.signup = (req, res, next) => {
 //Création méthode de connexion d'un utilisateur
 exports.login = (req, res, next) => {
     // Chiffrement email
-    const emailCrypto = cryptojs.HmacSHA256(req.body.email, "CLE_SECRET_CRYPTO").toString();
+    const emailCrypto = cryptojs.HmacSHA256(req.body.email, process.env.CRYPTOJS_KEY_EMAIL).toString();
     //Utilisation de la méthode findOne pour trouver l'utilisateur qui correspond à l'adresse mail utilisé
     User.findOne({ email: emailCrypto })
         //Vérification de récupération d'un utilisateur
@@ -58,7 +59,7 @@ exports.login = (req, res, next) => {
                             //1er argument des données que l'on veut encodé
                             { userId: user._id },
                             //clé secret de l'encodage
-                            'RANDOM_TOKEN_SECRET',
+                            process.env.JWT_KEY_TOKEN,
                             //configuration de l'expiration du token
                             { expiresIn: '24h' }
                         )

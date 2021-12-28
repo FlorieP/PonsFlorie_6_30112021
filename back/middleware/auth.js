@@ -1,5 +1,6 @@
 //Importation des packages de node
 const jwt = require('jsonwebtoken');
+const dotenv = require('dotenv').config();
 
 //Exportation d'un middleware
 module.exports = (req, res, next) => {
@@ -7,7 +8,7 @@ module.exports = (req, res, next) => {
     //Récupération du token dans le header authorization
     const token = req.headers.authorization.split(' ')[1];
     //Décodage du token 
-    const decodedToken = jwt.verify(token, 'RANDOM_TOKEN_SECRET');
+    const decodedToken = jwt.verify(token, process.env.JWT_KEY_TOKEN);
     // Récupération de l'userId inclus dans le token
     const userId = decodedToken.userId;
     //Comparaison l'ID user du token avec le champs UderiD de la sauce 
