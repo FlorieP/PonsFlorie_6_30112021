@@ -1,5 +1,6 @@
 //Importation des packages de node
 const fs = require('fs'); //filesystem
+const jwt = require('jsonwebtoken');
 
 //Importation du model sauce
 const Sauce = require('../models/Sauce');
@@ -49,9 +50,9 @@ exports.getOneSauce = (req, res, next) => {
 
 //Création du PUT pour modifier une sauce
 exports.modifySauce = (req, res, next) => {
-  //Vérification de l'userId
   Sauce.findOne({ _id: req.params.id })
     .then(sauce => {
+      //Vérification de l'userId en comparaison avec celui de la sauce
       if (req.body.userId != sauce.userId) {
         res.status(403).json({ message: "Seul l'utilisateur qui a créé la sauce peut la modifier" })
           .catch((error) => res.status(400).json({ error }));
@@ -77,16 +78,28 @@ exports.deleteSauce = (req, res, next) => {
   //Récupération du nom et l'url du fichier
   Sauce.findOne({ _id: req.params.id })
     .then(sauce => {
-      //récupération du nom du fichier via un split de l'url
-      const filename = sauce.imageUrl.split('/images/')[1];
-      //suppression du fichier
-      fs.unlink(`images/${filename}`, () => {
-        //fonction qui permet de supprimer une sauce
-        Sauce.deleteOne({ _id: req.params.id })
-          //suppression de la sauce via le paramètre id
-          .then(() => res.status(200).json({ message: 'Sauce supprimée !' }))
-          .catch(error => res.status(400).json({ error }));
-      });
+      //Récupération du token 
+      const token = req.headers.authorization.split(' ')[1];
+      //Décodage du token 
+      const decodedToken = jwt.verify(token, process.env.JWT_KEY_TOKEN);
+      // Récupération de l'userId inclus dans le token
+      const userId = decodedToken.userId;
+      //Vérification de l'userId en comlparaison à l'userId de la Sauce
+      if (userId != sauce.userId) {
+        res.status(403).json({ message: "Seul l'utilisateur qui a créé la sauce peut la modifier" })
+          .catch((error) => res.status(400).json({ error }));
+      } else {
+        //récupération du nom du fichier via un split de l'url
+        const filename = sauce.imageUrl.split('/images/')[1];
+        //suppression du fichier
+        fs.unlink(`images/${filename}`, () => {
+          //fonction qui permet de supprimer une sauce
+          Sauce.deleteOne({ _id: req.params.id })
+            //suppression de la sauce via le paramètre id
+            .then(() => res.status(200).json({ message: 'Sauce supprimée !' }))
+            .catch(error => res.status(400).json({ error }));
+        });
+      }
     })
     .catch(error => res.status(500).json({ error }));
 };
