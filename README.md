@@ -46,4 +46,4 @@ Florie PONS
 
 ## Projet
 
-Formation Développeur Web d'Openclassrooms - Projet 7
+Formation Développeur Web d'Openclassrooms - Projet 6
