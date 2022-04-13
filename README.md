@@ -1,6 +1,6 @@
 # PIIQUANTE
 
-Application web de critique des sauces piquantes.
+API sécurisée pour une application d'avis gastronomiques.
   
 ## Pré-requis
 
@@ -9,7 +9,7 @@ Logiciels nécessaires pour lancer l'application:
 - Node.js
 - Express.js
 - Dotenv
-- Angular
+- Mongoose
   
 ## Installation
 ### Back
@@ -38,15 +38,7 @@ Logiciels nécessaires pour lancer l'application:
 
 ### Front
 
-1. Installer Angular:
-```bash
-  npm install @angular/cli
-``` 
-2. Puis lancez le serveur en tapant la commande : 
-```bash
-  npm start
-``` 
-- Le serveur doit fonctionner sur [`http://127.0.0.1:8081/login`](http://127.0.0.1:8081/login).
+(voir readme dans dossier front)
 
 ## Auteur
 
